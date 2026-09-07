@@ -2,3 +2,7 @@ Enter 10-bit key: 1010000010
 Enter P10 permutation: 3 5 2 7 4 10 1 9 8 6
 Enter P8 permutation: 6 3 7 4 8 5 10 9
 Enter 8-bit plaintext: 10010111
+
+Expected output:
+Ciphertext: 00111000
+Decrypted: 10010111

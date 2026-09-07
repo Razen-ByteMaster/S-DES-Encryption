@@ -51,6 +51,8 @@ def generate_keys(key, p10, p8):
 def encryption_decryption(block, key1, key2, encryption=True):
     IP = [2, 6, 3, 1, 4, 8, 5, 7]
     permuted = [block[i - 1] for i in IP]
+    # Feistel decryption runs the rounds with subkeys in reverse order
+    first, second = (key1, key2) if encryption else (key2, key1)
 
     def round(right, key):
         # Expansion
@@ -70,15 +72,15 @@ def encryption_decryption(block, key1, key2, encryption=True):
 
     # First round
     left, right = permuted[:4], permuted[4:]
-    p4 = round(right, key1)
-    new_right = [1 ^ p for l, p in zip(left, p4)]
+    p4 = round(right, first)
+    new_right = [l ^ p for l, p in zip(left, p4)]
     result = right + new_right
 
-    # Swap and second round
+    # Swap and second round (no swap after the final round)
     left, right = result[:4], result[4:]
-    p4 = round(right, key2)
-    new_right = [1 ^ p for l, p in zip(left, p4)]
-    result = right + new_right
+    p4 = round(right, second)
+    new_right = [l ^ p for l, p in zip(left, p4)]
+    result = new_right + right
 
     # Inverse IP
     IP_inv = [4, 1, 3, 5, 7, 2, 8, 6]
